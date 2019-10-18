@@ -1,0 +1,31 @@
+html, body {
+  width: auto;
+  background-image: url("../images/bg-grunge.jpg");
+}
+
+.hidden {
+  display: none;
+}
+
+.button {
+  margin: 3% auto;
+  padding: 4px;
+  text-align: left;
+  font-size: 1.0em;
+  cursor: pointer;
+  opacity: 0.7;
+  background-color: #E5F2F2;
+}
+
+.button:hover {
+  background-color: #CFF2F2;
+}
+
+
+.reset {
+  background-color: #FBFBC9;
+}
+
+.reset:hover {
+  background-color: #EAEA9D;
+}

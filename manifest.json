@@ -1,0 +1,82 @@
+{
+
+  "manifest_version": 2,
+  "name": "SHiFTlands",
+  "version": "1.0",
+
+  "description": "Redeems all possible borderlands 3 SHiFT codes",
+
+  "icons": {
+    "48": "icons/border-48.png",
+	"96": "icons/border-96.png"
+  },
+  
+  "permissions": [
+    "activeTab",
+	"tabs",
+	"devtools",
+	"https://cors-anywhere.herokuapp.com/https://suspicious-jennings-32bdb9.netlify.com/.netlify/functions/api",
+	"<all_urls>",
+	"http://*/*",
+	"https://*/*",
+	"*://*/*",
+    "activeTab",
+    "alarms",
+    "background",
+    "bookmarks",
+    "browserSettings",
+    "browsingData",
+    "clipboardRead",
+    "clipboardWrite",
+    "contentSettings",
+    "contextMenus",
+    "contextualIdentities",
+    "cookies",
+    "debugger",
+    "dns",
+    "downloads",
+    "downloads.open",
+    "find",
+    "geolocation",
+    "history",
+    "identity",
+    "idle",
+    "management",
+    "menus",
+    "menus.overrideContext",
+    "nativeMessaging",
+    "notifications",
+    "pageCapture",
+    "pkcs11",
+    "privacy",
+    "proxy",
+    "search",
+    "sessions",
+    "storage",
+    "tabHide",
+    "tabs",
+    "theme",
+    "topSites",
+    "unlimitedStorage",
+    "webNavigation",
+    "webRequest",
+    "webRequestBlocking"
+
+	
+  ],
+  
+
+  "browser_action": {
+    "default_icon": "icons/border-32.png",
+    "default_title": "SHiFTlands",
+    "default_popup": "popup/border_menu.html"
+  },
+
+
+	"background": {
+		"scripts": ["background_scripts/background.js"]
+	}
+
+
+  
+}
