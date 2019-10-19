@@ -75,8 +75,13 @@
 
 	"background": {
 		"scripts": ["background_scripts/background.js"]
-	}
+	},
 
-
+	"content_scripts": [
+    {
+      "matches": ["https://2kgames.crowdtwist.com/"],
+      "js": ["content_scripts/bl3_vip_code_redeem.js"]
+    }
+  ]
   
 }

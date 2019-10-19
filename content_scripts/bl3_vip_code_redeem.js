@@ -245,7 +245,8 @@ async function gatherpoints() {
 	var [totalemailpoints, totalcreatorpoints, totalvaultpoints] = await Promise.all([emailmap(), creatorsmap(), vaultmap()]);
 	var totalpoints = emailpointsredeemed + creatorpointsredeemed + vaultpointsredeemed;
 	console.log("Total Points: ", totalpoints);
-	alert("Total Points Redeemed: " + totalpoints)
+	//alert("Total Points Redeemed: " + totalpoints);
+	window.location.href = "https://borderlands.com/en-US/vip-codes/";
 }
 
 // try and get the latest codes that are defined in the Borderlands discord spreadsheet
@@ -305,6 +306,8 @@ async function main() {
 	await tryGetLatestCodes();
 	gatherpoints();
 }
+
+	
 
 main();
 

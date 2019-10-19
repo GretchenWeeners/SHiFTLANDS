@@ -15,6 +15,8 @@
 
 	async function try_SHiFT(shiftcode, cur, last) {
 		cur++;
+
+		
 		//click SHiFT code button
 		document.getElementsByClassName('absolute pin bg-black opacity-0 group-hover:opacity-40 transitions-fast')[0].click();
 
@@ -58,22 +60,45 @@
 
 	async function onGot(item) {
 		//update array with current codes
-		console.log(item.BL3_SHIFTS.length);
+		
 		BL3_SHIFTS = item.BL3_SHIFTS;
+		BL3_SHIFTS_R = item.BL3_SHIFTS_R;
+		console.log("settings loaded:" + BL3_SHIFTS.length);
+		console.log("settings loaded:" + BL3_SHIFTS_R);
 	}
 
 	async function onError(error) {
 		console.log(`Error: ${error}`);
 	}
 
+	async function getsettings() {
+		//set settings from local storage
+		gettingStoredSettings = browser.storage.local.get();
+		gettingStoredSettings.then(onGot, onError);
+	}
+
 	async function main() {
+		console.log(BL3_SHIFTS.length);
+		console.log(BL3_SHIFTS_R);
+		console.log("clicky clicky");
 		//try all the codes
+		if (BL3_SHIFTS_R == undefined) {
+			BL3_SHIFTS_R = 0;
+		}
+		if (BL3_SHIFTS_R < BL3_SHIFTS.length || BL3_SHIFTS_R == undefined) {
+			var newcodes = (BL3_SHIFTS.length - BL3_SHIFTS_R);
+			console.log("proceeding with " + newcodes + " new codes");
+		} else {
+			console.log("canceling, no new codes");
+			return;
+		}
+		
 		var index;
-		for (index = 0; index < BL3_SHIFTS.length; ++index) {
-			await try_SHiFT(BL3_SHIFTS[index], index, BL3_SHIFTS.length);
+		for (index = BL3_SHIFTS_R; index < BL3_SHIFTS.length; ++index) {
+			await try_SHiFT(BL3_SHIFTS[index], index - BL3_SHIFTS_R, BL3_SHIFTS.length - BL3_SHIFTS_R);
 		}
 		//set all codes redeemed
-		var BL3_SHIFTS_R = 1;
+		BL3_SHIFTS_R = BL3_SHIFTS.length;
 		browser.storage.local.set({BL3_SHIFTS_R});
 		//check updates again to clear icon
 		browser.runtime.sendMessage({
@@ -81,11 +106,6 @@
 		});
 	}
 	
-	async function getsettings() {
-		//set settings from local storage
-		gettingStoredSettings = browser.storage.local.get();
-		gettingStoredSettings.then(onGot, onError);
-	}
   
 	//get settings on load
 	getsettings();
@@ -94,6 +114,7 @@
 		if (message.command === "reset") {
 			removeExistingBeasts();
 		} else if (message.command === "shift") {
+			console.log("click");
 			main();
 		} else if (message.command === "getsettings") {
 			getsettings();

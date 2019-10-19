@@ -38,7 +38,7 @@ function listenForClicks() {
 				if (tabs[0].url == "https://2kgames.crowdtwist.com/") {
 					browser.tabs.executeScript({file: "/content_scripts/bl3_vip_code_redeem.js"});
 				} else { //if not, open new tab then run script
-					browser.tabs.create({url: "https://2kgames.crowdtwist.com/"}).then(() => {
+					browser.tabs.update({url: "https://2kgames.crowdtwist.com/"}).then(() => {
 						browser.tabs.executeScript({file: "/content_scripts/bl3_vip_code_redeem.js"});
 					});
 				}

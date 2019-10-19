@@ -21,10 +21,12 @@ async function onGot(item) {
 	//apply current redeem state
 	BL3_SHIFTS_R = item.BL3_SHIFTS_R;
 	//set icon depending on if codes are ready to be redeemed
-	if (BL3_SHIFTS_R == 1) {
-		browser.browserAction.setIcon({path: "icons/border-32b.png"});
-	} else {
+
+		
+	if (BL3_SHIFTS_R < BL3_SHIFTS.length || BL3_SHIFTS_R == undefined) {
 		browser.browserAction.setIcon({path: "icons/border-32.png"});
+	} else {
+		browser.browserAction.setIcon({path: "icons/border-32b.png"});
 	}
 }
 
@@ -47,31 +49,32 @@ async function tryGetLatestCodes() {
 		console.error('codes null');
 		return;
 	}
-
-	//if we have new codes
-	if (codes.length > BL3_SHIFTS.length) {
-		var newcodes = codes.length - BL3_SHIFTS.length
-
-		console.log(newcodes + " new codes");
-		//apply new codes to array
-		BL3_SHIFTS = codes;
-		//set redeemed to false
-		BL3_SHIFTS_R = 0;
-		//store new codes
-		browser.storage.local.set({BL3_SHIFTS});
-		//store redeemed state
-		browser.storage.local.set({BL3_SHIFTS_R});
-		//change icon
-		browser.browserAction.setIcon({path: "icons/border-32.png"})
-	} else {
-		//if we dont, try again in 10 min
-		console.log('no new codes, will try again in 10 min.');
+	let arrays = [codes, BL3_SHIFTS];
+	//console.log(arrays.reduce((a, b) => a.filter(c => !b.includes(c))));
+	var newcodelist = (arrays.reduce((a, b) => a.filter(c => !b.includes(c))));
+	console.log(newcodelist);
+	
+	if (newcodelist == null || newcodelist == 0 || newcodelist.length == 0) {
+		console.error('newcodelist null: no new codes');
+		return;
 	}
+
+	var newcodes = newcodelist.length
+
+	console.log(newcodes + " new codes");
+		//apply new codes to array
+	BL3_SHIFTS = BL3_SHIFTS.concat(newcodelist);
+		//store new codes
+	browser.storage.local.set({BL3_SHIFTS});
+		//change icon
+	browser.browserAction.setIcon({path: "icons/border-32.png"})
+
 	//ensure out timer is dead
 	clearTimeout(tglc);
 	//set new timer for 10 min
 	var tglc = setTimeout(tryGetLatestCodes, 600000);
 }
+
 
 //get new codes on load
 tryGetLatestCodes();
