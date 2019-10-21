@@ -7,6 +7,7 @@
   
 	var BL3_SHIFTS = [];
 	var BL3_SHIFTS_R = 0;
+	var BL3_SHIFTS_S = 0;
 
 	//better sleep function
 	function sleep(ms) {
@@ -14,9 +15,9 @@
 	}
 
 	async function try_SHiFT(shiftcode, cur, last) {
+		//cuz math
 		cur++;
 
-		
 		//click SHiFT code button
 		document.getElementsByClassName('absolute pin bg-black opacity-0 group-hover:opacity-40 transitions-fast')[0].click();
 
@@ -37,12 +38,12 @@
 		document.getElementsByClassName('absolute pin bg-full bg-repeat')[2].click();
 
 
-
 		while(true) {
 			//success
 			if(typeof(document.getElementsByClassName('text-red')[0]) == 'undefined'){
 				//close window
 				document.getElementsByClassName('sprite-close-white-modal')[0].click();
+				BL3_SHIFTS_S++;
 				break;
 			}
 			//error
@@ -63,12 +64,10 @@
 		
 		BL3_SHIFTS = item.BL3_SHIFTS;
 		BL3_SHIFTS_R = item.BL3_SHIFTS_R;
-		console.log("settings loaded:" + BL3_SHIFTS.length);
-		console.log("settings loaded:" + BL3_SHIFTS_R);
 	}
 
 	async function onError(error) {
-		console.log(`Error: ${error}`);
+		console.log(`SHiFTLANDS:shift_redemption.js Error: ${error}`);
 	}
 
 	async function getsettings() {
@@ -78,18 +77,19 @@
 	}
 
 	async function main() {
-		console.log(BL3_SHIFTS.length);
-		console.log(BL3_SHIFTS_R);
-		console.log("clicky clicky");
+		BL3_SHIFTS_S = 0;
 		//try all the codes
 		if (BL3_SHIFTS_R == undefined) {
 			BL3_SHIFTS_R = 0;
 		}
 		if (BL3_SHIFTS_R < BL3_SHIFTS.length || BL3_SHIFTS_R == undefined) {
 			var newcodes = (BL3_SHIFTS.length - BL3_SHIFTS_R);
-			console.log("proceeding with " + newcodes + " new codes");
+			console.log("SHiFTLANDS:shift_redemption.js: proceeding with " + newcodes + " new codes");
 		} else {
-			console.log("canceling, no new codes");
+
+			onError("canceling, no new codes");
+			document.getElementsByClassName('text-shadow-heading mb-lg')[0].innerText="NO NEW CODES TO REDEEM";
+			document.getElementsByClassName('max-w-subheading mx-auto')[0].innerText="SHiFTLANDS checks for new codes every 10 minutes. When new codes are ready the SHiFTLANDS icon will light up. Not all codes will work, the system is not perfect.";
 			return;
 		}
 		
@@ -100,6 +100,10 @@
 		//set all codes redeemed
 		BL3_SHIFTS_R = BL3_SHIFTS.length;
 		browser.storage.local.set({BL3_SHIFTS_R});
+		//display successful redemptions
+		console.log("SHiFTLANDS:shift_redemption.js: " + BL3_SHIFTS_S + " new codes redeemed");
+		document.getElementsByClassName('text-shadow-heading mb-lg')[0].innerText=BL3_SHIFTS_S + " NEW CODES REDEEMED";
+		document.getElementsByClassName('max-w-subheading mx-auto')[0].innerText="SHiFTLANDS checks for new codes every 10 minutes. When new codes are ready the SHiFTLANDS icon will light up. Not all codes will work, the system is not perfect.";
 		//check updates again to clear icon
 		browser.runtime.sendMessage({
 			menucommand: "shupdate"
@@ -114,7 +118,6 @@
 		if (message.command === "reset") {
 			removeExistingBeasts();
 		} else if (message.command === "shift") {
-			console.log("click");
 			main();
 		} else if (message.command === "getsettings") {
 			getsettings();

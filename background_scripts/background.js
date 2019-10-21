@@ -1,38 +1,35 @@
 
-// SHiFTlands background.js
-// checks for updates to codes every 10 minutes or on command
-
-function foo() {
-	//for testing
-  console.log("communication open with background.js");
-}
-
-//for testing
-console.log("background.js loaded");
 
 var BL3_SHIFTS = [];
 var BL3_SHIFTS_R = 0;
 
 async function onGot(item) {
-		
-	console.log(item.BL3_SHIFTS.length);
+	//if (item.BL3_SHIFTS.length) {}
+	if (item.BL3_SHIFTS == undefined) {
+		browser.storage.local.set({BL3_SHIFTS});
+		browser.storage.local.set({BL3_SHIFTS_R});
+		gettingStoredSettings = browser.storage.local.get();
+		gettingStoredSettings.then(onGot, onError);
+		return;
+	}
 	//apply current codes to array
 	BL3_SHIFTS = item.BL3_SHIFTS;
 	//apply current redeem state
 	BL3_SHIFTS_R = item.BL3_SHIFTS_R;
 	//set icon depending on if codes are ready to be redeemed
 
-		
-	if (BL3_SHIFTS_R < BL3_SHIFTS.length || BL3_SHIFTS_R == undefined) {
+	if (BL3_SHIFTS_R < BL3_SHIFTS.length || BL3_SHIFTS_R == undefined || BL3_SHIFTS == undefined) {
 		browser.browserAction.setIcon({path: "icons/border-32.png"});
+		browser.browserAction.setTitle({title: "SHiFTLANDS: " + (BL3_SHIFTS.length - BL3_SHIFTS_R) + " new codes"});
 	} else {
 		browser.browserAction.setIcon({path: "icons/border-32b.png"});
+		browser.browserAction.setTitle({title: "SHiFTLANDS"});
 	}
 }
 
 async function onError(error) {
 	//display an error, sometimes, or crash if the error is bad enough, cuz javascript
-	console.log(`Error: ${error}`);
+	console.log(`SHiFTLANDS:background.js Error: ${error}`);
 }
 
 async function tryGetLatestCodes() {
@@ -46,28 +43,27 @@ async function tryGetLatestCodes() {
 	
 	//stop if we couldnt grab new codes
 	if (codes == null) {
-		console.error('codes null');
+		onError("Couldnt grab code list");
 		return;
 	}
+	//parse data for new codes
 	let arrays = [codes, BL3_SHIFTS];
-	//console.log(arrays.reduce((a, b) => a.filter(c => !b.includes(c))));
 	var newcodelist = (arrays.reduce((a, b) => a.filter(c => !b.includes(c))));
-	console.log(newcodelist);
-	
 	if (newcodelist == null || newcodelist == 0 || newcodelist.length == 0) {
-		console.error('newcodelist null: no new codes');
+		onError("No new codes");
 		return;
 	}
 
 	var newcodes = newcodelist.length
 
-	console.log(newcodes + " new codes");
-		//apply new codes to array
+	console.log("SHiFTLANDS:background.js: " + newcodes + " new codes");
+	//apply new codes to array
 	BL3_SHIFTS = BL3_SHIFTS.concat(newcodelist);
-		//store new codes
+	//store new codes
 	browser.storage.local.set({BL3_SHIFTS});
-		//change icon
-	browser.browserAction.setIcon({path: "icons/border-32.png"})
+	//change icon by reading saved settings
+	gettingStoredSettings = browser.storage.local.get();
+	gettingStoredSettings.then(onGot, onError);
 
 	//ensure out timer is dead
 	clearTimeout(tglc);
@@ -84,4 +80,5 @@ browser.runtime.onMessage.addListener((message) => {
 	if (message.menucommand === "shupdate") {
 		tryGetLatestCodes();
 	}
+	
 });

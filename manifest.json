@@ -15,73 +15,30 @@
     "activeTab",
 	"tabs",
 	"devtools",
-	"https://cors-anywhere.herokuapp.com/https://suspicious-jennings-32bdb9.netlify.com/.netlify/functions/api",
 	"<all_urls>",
 	"http://*/*",
 	"https://*/*",
 	"*://*/*",
-    "activeTab",
-    "alarms",
-    "background",
-    "bookmarks",
-    "browserSettings",
-    "browsingData",
-    "clipboardRead",
-    "clipboardWrite",
-    "contentSettings",
-    "contextMenus",
-    "contextualIdentities",
-    "cookies",
-    "debugger",
-    "dns",
-    "downloads",
-    "downloads.open",
-    "find",
-    "geolocation",
-    "history",
-    "identity",
-    "idle",
-    "management",
-    "menus",
-    "menus.overrideContext",
     "nativeMessaging",
     "notifications",
-    "pageCapture",
-    "pkcs11",
-    "privacy",
-    "proxy",
-    "search",
-    "sessions",
     "storage",
     "tabHide",
-    "tabs",
-    "theme",
-    "topSites",
-    "unlimitedStorage",
     "webNavigation",
-    "webRequest",
-    "webRequestBlocking"
-
-	
+    "webRequest"
   ],
   
 
   "browser_action": {
     "default_icon": "icons/border-32.png",
-    "default_title": "SHiFTlands",
+    "default_title": "SHiFTLANDS",
     "default_popup": "popup/border_menu.html"
   },
 
 
 	"background": {
 		"scripts": ["background_scripts/background.js"]
-	},
+	}
 
-	"content_scripts": [
-    {
-      "matches": ["https://2kgames.crowdtwist.com/"],
-      "js": ["content_scripts/bl3_vip_code_redeem.js"]
-    }
-  ]
+
   
 }

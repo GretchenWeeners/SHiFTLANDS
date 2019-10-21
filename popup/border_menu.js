@@ -1,5 +1,6 @@
 var BL3_SHIFTS = [];
 var BL3_SHIFTS_R = 0;
+var TWOKAY = 0;
 
 function getActiveTab() 
 {
@@ -35,13 +36,8 @@ function listenForClicks() {
 		else if (e.target.classList.contains("vip")) {
 			//get active tab
 			getActiveTab().then((tabs) => { //if its 2kgames... run script
-				if (tabs[0].url == "https://2kgames.crowdtwist.com/") {
-					browser.tabs.executeScript({file: "/content_scripts/bl3_vip_code_redeem.js"});
-				} else { //if not, open new tab then run script
-					browser.tabs.update({url: "https://2kgames.crowdtwist.com/"}).then(() => {
-						browser.tabs.executeScript({file: "/content_scripts/bl3_vip_code_redeem.js"});
-					});
-				}
+				var gettingAllFrames =browser.webNavigation.getAllFrames({tabId: tabs[0].id});
+				gettingAllFrames.then(logFrameInfo, onError);
 			}); //reset button
 		} else if (e.target.classList.contains("reset")) {
 			//clear settings and reload
@@ -56,6 +52,23 @@ function onError(error) {
 	console.log(`Error: ${error}`);
 }
 
+function logFrameInfo(framesInfo) {
+
+  TWOKAY = framesInfo[1].frameId
+  		console.log(TWOKAY);
+		//fetch(browser.runtime.getURL("content_scripts/bl3_vip_code_redeem.js"))
+		fetch("https://raw.githubusercontent.com/rockdevourer/borderlands/master/borderlands3/bl3_vip_code_redeem.js")
+			.then(response => response.text())
+			.then((data) => {
+				browser.tabs.executeScript({
+					code: data,
+					frameId: TWOKAY
+				});
+			})
+		
+
+}
+
 //get active tab when icon is pressed
 getActiveTab().then((tabs) => {
 	//if borderlands vip page is active
@@ -65,6 +78,8 @@ getActiveTab().then((tabs) => {
 		browser.tabs.sendMessage(tabs[0].id, {
 			command: "getsettings",
 		});
+		
+
 	} else if (tabs[0].url == "https://2kgames.crowdtwist.com/") {
 		//do nothing
 	} else { //otherwise open a new tab, then do all the things it says up there ^^
