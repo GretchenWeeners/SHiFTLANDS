@@ -1,9 +1,5 @@
 (async function() {
 
-	if (window.hasRun) {
-		return;
-	}
-	window.hasRun = true;
   
 	var BL3_SHIFTS = [];
 	var BL3_SHIFTS_R = 0;
@@ -72,8 +68,11 @@
 
 	async function getsettings() {
 		//set settings from local storage
-		gettingStoredSettings = browser.storage.local.get();
-		gettingStoredSettings.then(onGot, onError);
+		await browser.storage.local.get().then((item) => { 
+			BL3_SHIFTS = item.BL3_SHIFTS;
+			BL3_SHIFTS_R = item.BL3_SHIFTS_R;
+		});
+
 	}
 
 	async function main() {
@@ -89,10 +88,13 @@
 
 			onError("canceling, no new codes");
 			document.getElementsByClassName('text-shadow-heading mb-lg')[0].innerText="NO NEW CODES TO REDEEM";
-			document.getElementsByClassName('max-w-subheading mx-auto')[0].innerText="SHiFTLANDS checks for new codes every 10 minutes. When new codes are ready the SHiFTLANDS icon will light up. Not all codes will work, the system is not perfect.";
+			document.getElementsByClassName('max-w-subheading mx-auto')[0].innerText="SHiFTLANDS checks for new codes every 10 minutes. When new codes are ready the SHiFTLANDS icon will light up.";
 			return;
 		}
 		
+		document.getElementsByClassName('text-shadow-heading mb-lg')[0].innerText="TRYING SHIFT CODES";
+		document.getElementsByClassName('max-w-subheading mx-auto')[0].innerText="Please stay on this tab until the process is complete.";
+
 		var index;
 		for (index = BL3_SHIFTS_R; index < BL3_SHIFTS.length; ++index) {
 			await try_SHiFT(BL3_SHIFTS[index], index - BL3_SHIFTS_R, BL3_SHIFTS.length - BL3_SHIFTS_R);
@@ -103,7 +105,7 @@
 		//display successful redemptions
 		console.log("SHiFTLANDS:shift_redemption.js: " + BL3_SHIFTS_S + " new codes redeemed");
 		document.getElementsByClassName('text-shadow-heading mb-lg')[0].innerText=BL3_SHIFTS_S + " NEW CODES REDEEMED";
-		document.getElementsByClassName('max-w-subheading mx-auto')[0].innerText="SHiFTLANDS checks for new codes every 10 minutes. When new codes are ready the SHiFTLANDS icon will light up. Not all codes will work, the system is not perfect.";
+		document.getElementsByClassName('max-w-subheading mx-auto')[0].innerText="SHiFTLANDS checks for new codes every 10 minutes. When new codes are ready the SHiFTLANDS icon will light up.";
 		//check updates again to clear icon
 		browser.runtime.sendMessage({
 			menucommand: "shupdate"
@@ -112,16 +114,8 @@
 	
   
 	//get settings on load
-	getsettings();
-	//listen for messages from popup menu
-	browser.runtime.onMessage.addListener((message) => {
-		if (message.command === "reset") {
-			removeExistingBeasts();
-		} else if (message.command === "shift") {
-			main();
-		} else if (message.command === "getsettings") {
-			getsettings();
-		}
-	});
+	await getsettings();
+	
+	await main();
 
 })();
