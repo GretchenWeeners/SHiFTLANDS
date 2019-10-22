@@ -4,7 +4,7 @@ var BL3_SHIFTS = [];
 var BL3_SHIFTS_R = 0;
 
 async function onGot(item) {
-	//if (item.BL3_SHIFTS.length) {}
+	//populate settings if they are blank
 	if (item.BL3_SHIFTS == undefined) {
 		browser.storage.local.set({BL3_SHIFTS});
 		browser.storage.local.set({BL3_SHIFTS_R});
@@ -21,9 +21,11 @@ async function onGot(item) {
 	if (BL3_SHIFTS_R < BL3_SHIFTS.length || BL3_SHIFTS_R == undefined || BL3_SHIFTS == undefined) {
 		browser.browserAction.setIcon({path: "icons/border-32.png"});
 		browser.browserAction.setTitle({title: "SHiFTLANDS: " + (BL3_SHIFTS.length - BL3_SHIFTS_R) + " new codes"});
+		browser.browserAction.setBadgeText({text: (BL3_SHIFTS.length - BL3_SHIFTS_R).toString()});
 	} else {
 		browser.browserAction.setIcon({path: "icons/border-32b.png"});
 		browser.browserAction.setTitle({title: "SHiFTLANDS"});
+		browser.browserAction.setBadgeText({text: ""});
 	}
 }
 
