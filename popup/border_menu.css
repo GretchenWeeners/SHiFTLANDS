@@ -1,6 +1,10 @@
 html, body {
   width: auto;
+  height: auto;
   background-image: url("../images/bg-grunge.jpg");
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: center; 
 }
 
 .hidden {
