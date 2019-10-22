@@ -33,7 +33,7 @@ function listenForClicks() {
 		else if (e.target.classList.contains("shupdate")) {
 			//get background.js and send to run_shupdate command
 			browser.runtime.getBackgroundPage()
-				.then(run_shupdate, onError);
+			.then(run_shupdate, onError);
 		} //VIP button
 		else if (e.target.classList.contains("vip")) {
 			//get active tab
@@ -46,8 +46,17 @@ function listenForClicks() {
 						frameId: TWOKAY
 					});
 				})
-				var gettingAllFrames =browser.webNavigation.getAllFrames({tabId: tabs[0].id});
-				gettingAllFrames.then(logFrameInfo, onError);
+				browser.webNavigation.getAllFrames({tabId: tabs[0].id}).then((framesInfo) => {
+					TWOKAY = framesInfo[1].frameId
+					fetch("https://raw.githubusercontent.com/rockdevourer/borderlands/master/borderlands3/bl3_vip_code_redeem.js")
+					.then(response => response.text())
+					.then((data) => {
+						browser.tabs.executeScript({
+							code: data,
+							frameId: TWOKAY
+						});
+					})
+				});
 			});
 		} else if (e.target.classList.contains("reset")) {
 			//clear settings and reload
@@ -62,19 +71,6 @@ function onError(error) {
 	console.log(`Error: ${error}`);
 }
 
-function logFrameInfo(framesInfo) {
-
-	TWOKAY = framesInfo[1].frameId
-	console.log(TWOKAY);
-	fetch("https://raw.githubusercontent.com/rockdevourer/borderlands/master/borderlands3/bl3_vip_code_redeem.js")
-		.then(response => response.text())
-		.then((data) => {
-			browser.tabs.executeScript({
-				code: data,
-				frameId: TWOKAY
-			});
-		})
-}
 
 //get active tab when icon is pressed
 getActiveTab().then((tabs) => {

@@ -3,6 +3,7 @@
 var BL3_SHIFTS = [];
 var BL3_SHIFTS_R = 0;
 
+//this is messy, im not sorry
 async function onGot(item) {
 	//populate settings if they are blank
 	if (item.BL3_SHIFTS == undefined) {

@@ -62,10 +62,6 @@
 		BL3_SHIFTS_R = item.BL3_SHIFTS_R;
 	}
 
-	async function onError(error) {
-		console.log(`SHiFTLANDS:shift_redemption.js Error: ${error}`);
-	}
-
 	async function getsettings() {
 		//set settings from local storage
 		await browser.storage.local.get().then((item) => { 
@@ -85,8 +81,7 @@
 			var newcodes = (BL3_SHIFTS.length - BL3_SHIFTS_R);
 			console.log("SHiFTLANDS:shift_redemption.js: proceeding with " + newcodes + " new codes");
 		} else {
-
-			onError("canceling, no new codes");
+			console.log("SHiFTLANDS:shift_redemption.js: canceling, no new codes");
 			document.getElementsByClassName('text-shadow-heading mb-lg')[0].innerText="NO NEW CODES TO REDEEM";
 			document.getElementsByClassName('max-w-subheading mx-auto')[0].innerText="SHiFTLANDS checks for new codes every 10 minutes. When new codes are ready the SHiFTLANDS icon will light up.";
 			return;
