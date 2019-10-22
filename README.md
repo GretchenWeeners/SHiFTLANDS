@@ -1,2 +1,2 @@
 # SHiFTLANDS
- Borderlands SHiFT fetch and redeem firefox extention.
+FireFox extention to fetch and redeem SHiFT codes.
