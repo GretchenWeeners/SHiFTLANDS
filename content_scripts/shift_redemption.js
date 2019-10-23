@@ -37,8 +37,9 @@
 		while(true) {
 			//success
 			if(typeof(document.getElementsByClassName('text-red')[0]) == 'undefined'){
-				//close window
-				document.getElementsByClassName('sprite-close-white-modal')[0].click();
+				//try to close window
+				try {document.getElementsByClassName('sprite-close-white-modal')[0].click();}
+				catch(e) {break;}
 				BL3_SHIFTS_S++;
 				break;
 			}
