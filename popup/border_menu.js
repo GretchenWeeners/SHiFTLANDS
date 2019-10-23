@@ -1,6 +1,7 @@
 var BL3_SHIFTS = [];
 var BL3_SHIFTS_R = 0;
 var TWOKAY = 0;
+var TWOKAYF = 0;
 
 function getActiveTab() 
 {
@@ -40,16 +41,21 @@ function listenForClicks() {
 						code: data
 					});
 				})
-				browser.webNavigation.getAllFrames({tabId: tabs[0].id}).then((framesInfo) => {
-					TWOKAY = framesInfo[1].frameId;
-					fetch("https://raw.githubusercontent.com/rockdevourer/borderlands/master/borderlands3/bl3_vip_code_redeem.js")
-					.then(response => response.text())
-					.then((data) => {
-						browser.tabs.executeScript({
-							code: data,
-							frameId: TWOKAY
-						});
-					})
+				browser.webNavigation.getAllFrames({tabId: tabs[0].id}).then((framesInfo) => {	
+					var i;
+					for (i = 1; i < framesInfo.length; i++) { 
+						if (framesInfo[i].url.includes("2kgames.crowdtwist.com")) {
+							TWOKAY = framesInfo[i].frameId;
+							fetch("https://raw.githubusercontent.com/rockdevourer/borderlands/master/borderlands3/bl3_vip_code_redeem.js")
+							.then(response => response.text())
+							.then((data) => {
+								browser.tabs.executeScript({
+									code: data,
+									frameId: TWOKAY
+								});
+							})
+						}
+					}
 				});
 			});
 		} else if (e.target.classList.contains("reset")) {
