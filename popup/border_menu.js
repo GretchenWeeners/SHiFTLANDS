@@ -22,7 +22,7 @@ function listenForClicks() {
 					browser.tabs.executeScript({
 						code: data
 					});
-				})
+				});
 			});
 		} //update button
 		else if (e.target.classList.contains("shupdate")) {
@@ -40,7 +40,7 @@ function listenForClicks() {
 					browser.tabs.executeScript({
 						code: data
 					});
-				})
+				});
 				browser.webNavigation.getAllFrames({tabId: tabs[0].id}).then((framesInfo) => {	
 					var i;
 					for (i = 1; i < framesInfo.length; i++) { 
@@ -53,7 +53,7 @@ function listenForClicks() {
 									code: data,
 									frameId: TWOKAY
 								});
-							})
+							});
 						}
 					}
 				});
