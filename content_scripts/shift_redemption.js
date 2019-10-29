@@ -9,6 +9,14 @@
 	function sleep(ms) {
 		return new Promise(resolve => setTimeout(resolve, ms));
 	}
+	
+	function consolelog(log) {
+		var today = new Date();
+		var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+		var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+		var dateTime = date+' '+time;
+		console.log(`[SHiFTLANDS][${dateTime}] ${log}`);
+	}
 
 	async function try_SHiFT(shiftcode, cur, last) {
 		//cuz math
@@ -68,6 +76,7 @@
 		await browser.storage.local.get().then((item) => { 
 			BL3_SHIFTS = item.BL3_SHIFTS;
 			BL3_SHIFTS_R = item.BL3_SHIFTS_R;
+			consolelog(`Successfully loaded settings :: ${BL3_SHIFTS_R}/${BL3_SHIFTS.length} codes have been tried`);
 		});
 
 	}
@@ -80,9 +89,9 @@
 		}
 		if (BL3_SHIFTS_R < BL3_SHIFTS.length || BL3_SHIFTS_R == undefined) {
 			var newcodes = (BL3_SHIFTS.length - BL3_SHIFTS_R);
-			console.log("SHiFTLANDS:shift_redemption.js: proceeding with " + newcodes + " new codes");
+			consolelog(`Proceeding with ${newcodes} new codes`);
 		} else {
-			console.log("SHiFTLANDS:shift_redemption.js: canceling, no new codes");
+			consolelog(`Canceling, no new codes`);
 			document.getElementsByClassName('text-shadow-heading mb-lg')[0].innerText="NO NEW CODES TO REDEEM";
 			document.getElementsByClassName('max-w-subheading mx-auto')[0].innerText="SHiFTLANDS checks for new codes every 10 minutes. When new codes are ready the SHiFTLANDS icon will light up.";
 			return;
@@ -99,16 +108,19 @@
 		BL3_SHIFTS_R = BL3_SHIFTS.length;
 		browser.storage.local.set({BL3_SHIFTS_R});
 		//display successful redemptions
-		console.log("SHiFTLANDS:shift_redemption.js: " + BL3_SHIFTS_S + " new codes redeemed");
+		consolelog(`Successfully redeemed ${BL3_SHIFTS_S} new codes`);
 		document.getElementsByClassName('text-shadow-heading mb-lg')[0].innerText=BL3_SHIFTS_S + " NEW CODES REDEEMED";
 		document.getElementsByClassName('max-w-subheading mx-auto')[0].innerText="SHiFTLANDS checks for new codes every 10 minutes. When new codes are ready the SHiFTLANDS icon will light up.";
+		//TODO: statistics of every responce gathered from red-text
+		
 		//check updates again to clear icon
 		browser.runtime.sendMessage({
 			menucommand: "shupdate"
 		});
 	}
 	
-  
+	consolelog("Successfully injected code into page");
+	
 	//get settings on load
 	await getsettings();
 	
