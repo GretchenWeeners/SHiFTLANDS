@@ -2,6 +2,20 @@
 
 var BL3_SHIFTS = [];
 var BL3_SHIFTS_R = 0;
+var regex = /[a-zA-Z0-9]{5}-[a-zA-Z0-9]{5}-[a-zA-Z0-9]{5}-[a-zA-Z0-9]{5}-[a-zA-Z0-9]{5}/g;
+var sources = [
+  'https://www.reddit.com/r/Borderlandsshiftcodes/comments/d4510u/golden_key_mega_thread/.json',
+  'https://www.reddit.com/r/borderlands3/comments/d41s0k/all_currently_available_shift_codes/.json',
+  'https://www.reddit.com/r/Borderlandsshiftcodes/new/.json'
+];
+
+function consolelog(log) {
+	var today = new Date();
+	var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+	var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+	var dateTime = date+' '+time;
+	console.log(`[SHiFTLANDS][${dateTime}] ${log}`);
+}
 
 //this is messy, im not sorry
 async function onGot(item) {
@@ -32,7 +46,7 @@ async function onGot(item) {
 
 async function onError(error) {
 	//display an error, sometimes, or crash if the error is bad enough, cuz javascript
-	console.log(`SHiFTLANDS:background.js Error: ${error}`);
+	consolelog(`Error: ${error}`);
 }
 
 async function tryGetLatestCodes() {
@@ -41,25 +55,41 @@ async function tryGetLatestCodes() {
 	gettingStoredSettings.then(onGot, onError);
 
 	//grab new codes and put in array
-	var codes = [];
-	codes =  await (await fetch("https://suspicious-jennings-32bdb9.netlify.com/.netlify/functions/api")).json();
-	
-	//stop if we couldnt grab new codes
-	if (codes == null) {
-		onError("Couldnt grab code list");
-		return;
+	var allcodes = [];
+	var index;
+	for (index = 0; index < sources.length; ++index) {
+		consolelog(`Checking for new codes on ${sources[index]}`);
+		var codes = [];
+		codes =  await (await fetch(sources[index])).json();
+		if (codes.data == undefined) {
+			var allText = codes.map((response) => JSON.stringify(response.data));
+		} else {
+			var allText = codes.data.children.map((response) => JSON.stringify(response.data));
+		}
+		var matches = JSON.stringify(allText).match(regex);
+		let uniq = matches => [...new Set(matches)];
+		umatches = uniq(matches)
+		let arrays = [umatches, allcodes];
+		var newcodelist = (arrays.reduce((a, b) => a.filter(c => !b.includes(c))));
+		if (newcodelist == null || newcodelist == 0 || newcodelist.length == 0) {
+			return;
+		}
+		allcodes = allcodes.concat(newcodelist);
+		consolelog(`Found ${matches.length} codes :: ${umatches.length} unique :: ${newcodelist.length} added :: ${allcodes.length} total`);
 	}
-	//parse data for new codes
-	let arrays = [codes, BL3_SHIFTS];
+	
+	consolelog(`Comparing ${allcodes.length} codes against ${BL3_SHIFTS.length} known codes`);
+	let arrays = [allcodes, BL3_SHIFTS];
 	var newcodelist = (arrays.reduce((a, b) => a.filter(c => !b.includes(c))));
 	if (newcodelist == null || newcodelist == 0 || newcodelist.length == 0) {
-		onError("No new codes");
+		consolelog(`No new codes`);
 		return;
 	}
 
 	var newcodes = newcodelist.length
+	if (newcodes == 0) {return;}
 
-	console.log("SHiFTLANDS:background.js: " + newcodes + " new codes");
+	consolelog(`${newcodes} new codes`);
 	//apply new codes to array
 	BL3_SHIFTS = BL3_SHIFTS.concat(newcodelist);
 	//store new codes
