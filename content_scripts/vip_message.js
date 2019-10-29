@@ -18,7 +18,7 @@ try {
 	consolelog(`Succeeded on connection test.`);
 } catch(e) {
 	document.getElementsByClassName('text-shadow-heading mb-lg')[0].innerText="FAILED!!";
-	document.getElementsByClassName('max-w-subheading mx-auto')[0].innerHTML="Something is blocking our connection. Whitelist crowdtwist.com in all ad-blocking extensions, even if they are off. <a href=\"https://imgur.com/a/BFsyaau\"><br><b>uBlock users click here</b></a>.";
+	document.getElementsByClassName('max-w-subheading mx-auto')[0].innerHTML="Something is blocking our connection. Whitelist crowdtwist.com in all ad-blocking extensions, even if they are off. <a href=\"https://imgur.com/a/BFsyaau\"><br><b>uBlock Origin / Nano users click here</b></a>.";
 	consolelog(`Failed on connection test.`);
 }
 
