@@ -45,6 +45,7 @@
 		while(true) {
 			//success
 			if(typeof(document.getElementsByClassName('text-red')[0]) == 'undefined'){
+				consolelog(`${shiftcode} :: succeeded`);
 				//try to close window
 				try {document.getElementsByClassName('sprite-close-white-modal')[0].click();}
 				catch(e) {break;}
@@ -53,6 +54,11 @@
 			}
 			//error
 			if (document.getElementsByClassName('text-red')[0].innerText.length > 1){
+				var errMessage = document.getElementsByClassName('text-red')[0].innerText;
+				consolelog(`${shiftcode} :: ${errMessage}`);
+				if (errMessage == "You have attempted this too many times. Please try again later.") {
+					document.getElementsByClassName('text-shadow-heading mb-lg')[0].innerText="RATE LIMITED";
+				}
 				//reset error message
 				document.getElementsByClassName('text-red')[0].innerText=" ";
 				//close window
@@ -101,16 +107,26 @@
 		document.getElementsByClassName('max-w-subheading mx-auto')[0].innerText="Please stay on this tab until the process is complete.";
 
 		var index;
-		for (index = BL3_SHIFTS_R; index < BL3_SHIFTS.length; ++index) {
-			await try_SHiFT(BL3_SHIFTS[index], index - BL3_SHIFTS_R, BL3_SHIFTS.length - BL3_SHIFTS_R);
+		var index_start = BL3_SHIFTS_R;
+		for (index = index_start; index < BL3_SHIFTS.length; ++index) {
+			await try_SHiFT(BL3_SHIFTS[index], index - index_start, BL3_SHIFTS.length - index_start);
+			var ratelimited = document.getElementsByClassName('text-shadow-heading mb-lg')[0].innerText;
+			if (ratelimited == "RATE LIMITED") {
+				break;
+			} else {
+				BL3_SHIFTS_R++;
+			}
 		}
 		//set all codes redeemed
-		BL3_SHIFTS_R = BL3_SHIFTS.length;
 		browser.storage.local.set({BL3_SHIFTS_R});
 		//display successful redemptions
 		consolelog(`Successfully redeemed ${BL3_SHIFTS_S} new codes`);
 		document.getElementsByClassName('text-shadow-heading mb-lg')[0].innerText=BL3_SHIFTS_S + " NEW CODES REDEEMED";
-		document.getElementsByClassName('max-w-subheading mx-auto')[0].innerText="SHiFTLANDS checks for new codes every 10 minutes. When new codes are ready the SHiFTLANDS icon will light up.";
+		if (BL3_SHIFTS_R < BL3_SHIFTS.length) {
+			document.getElementsByClassName('max-w-subheading mx-auto')[0].innerText="Your account has reached the max amount of codes it can try. Please try again in an hour.";
+		} else {
+			document.getElementsByClassName('max-w-subheading mx-auto')[0].innerText="SHiFTLANDS checks for new codes every 10 minutes. When new codes are ready the SHiFTLANDS icon will light up.";
+		}
 		//TODO: statistics of every responce gathered from red-text
 		
 		//check updates again to clear icon
