@@ -98,14 +98,11 @@ async function tryGetLatestCodes() {
 	gettingStoredSettings = browser.storage.local.get();
 	gettingStoredSettings.then(onGot, onError);
 
-	//ensure out timer is dead
-	clearTimeout(tglc);
-	//set new timer for 10 min
-	var tglc = setTimeout(tryGetLatestCodes, 600000);
 }
 
 
-//get new codes on load
+//get new codes on load and repeat every 10 minutes
+setInterval(tryGetLatestCodes, 600000);
 tryGetLatestCodes();
 
 //listen for messages from popup
