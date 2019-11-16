@@ -16,17 +16,25 @@
 		var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
 		var dateTime = date+' '+time;
 		console.log(`[SHiFTLANDS][${dateTime}] ${log}`);
+		browser.runtime.sendMessage({
+			statuscommand: log
+		});
 	}
 
 	async function try_SHiFT(shiftcode, cur, last) {
 		//cuz math
 		cur++;
-
+		
+		var btnShift = 0;
+		while (btnShift == 0) {
+			if (typeof(document.getElementsByClassName('absolute pin bg-black opacity-0 group-hover:opacity-40 transitions-fast')[0]) != 'undefined') {btnShift = 1;}
+			await sleep(1);
+		}
 		//click SHiFT code button
 		document.getElementsByClassName('absolute pin bg-black opacity-0 group-hover:opacity-40 transitions-fast')[0].click();
 
 		//steal shift logo for title
-		document.getElementsByClassName('sprite-modal-shift')[0].outerHTML="<div><h5>SHiFTlands</h5></div>";
+		document.getElementsByClassName('sprite-modal-shift')[0].outerHTML="<div><h5>SHiFTLANDS</h5></div>";
 		
 		//steal text for status
 		document.getElementsByClassName('text-white mt-lg')[0].innerText="Trying SHiFT code " + cur + " of " + last;
@@ -37,9 +45,20 @@
 		//trigger change event
 		document.getElementsByName('code')[0].dispatchEvent(new Event('change'));
 
-
-		//click button
+		
+		var btnCheck = 0;
+		while (btnCheck == 0) {
+			await sleep(1);
+			if (typeof(document.getElementsByClassName('absolute pin bg-full bg-repeat')[2]) != 'undefined') {
+				btnCheck = 1;
+				break;
+			}
+			
+		}
+		await sleep(100);
 		document.getElementsByClassName('absolute pin bg-full bg-repeat')[2].click();
+		//click check button
+		
 
 
 		while(true) {
@@ -70,13 +89,6 @@
 		await sleep(1);
 	}
 
-	async function onGot(item) {
-		//update array with current codes
-		
-		BL3_SHIFTS = item.BL3_SHIFTS;
-		BL3_SHIFTS_R = item.BL3_SHIFTS_R;
-	}
-
 	async function getsettings() {
 		//set settings from local storage
 		await browser.storage.local.get().then((item) => { 
@@ -105,7 +117,9 @@
 		
 		document.getElementsByClassName('text-shadow-heading mb-lg')[0].innerText="TRYING SHIFT CODES";
 		document.getElementsByClassName('max-w-subheading mx-auto')[0].innerText="Please stay on this tab until the process is complete.";
-
+		
+		await sleep(1000);
+		
 		var index;
 		var index_start = BL3_SHIFTS_R;
 		for (index = index_start; index < BL3_SHIFTS.length; ++index) {
@@ -115,6 +129,7 @@
 				break;
 			} else {
 				BL3_SHIFTS_R++;
+				browser.storage.local.set({BL3_SHIFTS_R});
 			}
 		}
 		//set all codes redeemed
@@ -129,17 +144,30 @@
 		}
 		//TODO: statistics of every responce gathered from red-text
 		
-		//check updates again to clear icon
+		//check updates again, because we can
 		browser.runtime.sendMessage({
-			menucommand: "shupdate"
+			menucommand: "silentshupdate"
 		});
 	}
+	
+	async function togglerunningoff(buttonName) {
+		browser.runtime.sendMessage({
+			togglerunningoff: buttonName
+		});
+	}
+	
 	
 	consolelog("Successfully injected code into page");
 	
 	//get settings on load
 	await getsettings();
 	
+
 	await main();
+	
+	togglerunningoff("#button-shift");
+
+	
+	
 
 })();

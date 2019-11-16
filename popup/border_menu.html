@@ -7,14 +7,24 @@
   </head>
 
 <body>
+<div id="wrapper"> 
+ <div id="menu">
+  <div id="logo-content">
+    <div class="banner"><img class="logo" src="../images/shiftlands-vip-logo.png" /><img class="settings-icon" src="../images/settings.png" /></div>
+  </div>
   <div id="vip-content">
-    <div class="button shift"><img src="../images/shift.png" width="32" height="32" /> Redeem SHiFT codes</div>
-    <div class="button vip"><img src="../images/vault.png" width="32" height="32" /> Redeem VIP codes</div>
+    <div id="button-shift" class="button shift"><img class="image" src="../images/shift.png" /> Redeem SHiFT codes</div>
+    <div id="button-vip" class="button vip"><img class="image" src="../images/vault.png" /> Redeem VIP codes</div>
+	<div id="button-activities" class="button activities hidden"><img class="image" src="../images/activities.png" /> Redeem VIP activities</div>
   </div>
   <div id="other-content">
-    <div class="button shupdate"> Check for new SHiFT codes</div>
-    <div class="button reset"> Reset all saved data</div>
+    <div id="button-shupdate" class="button shupdate"> Check for new SHiFT codes</div>
   </div>
+ </div>
+ <div id="status-content" class="status-content hidden">
+    <div class="status"> </div>
+  </div>
+</div>
   <script src="border_menu.js"></script>
 </body>
 

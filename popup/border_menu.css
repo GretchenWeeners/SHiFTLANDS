@@ -1,35 +1,172 @@
 html, body {
-  width: auto;
+  width: 220px;
   height: auto;
   background-image: url("../images/bg-grunge.jpg");
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-position: center; 
+  overflow: hidden;
+}
+
+#wrapper {
+	width:inherit;
+    height:inherit;
+	padding: 0px 0px 0px 0px;
+}
+
+#settings {
+  width: 200px;
+  height: auto;
+  border: 1px solid #e0d0c0;
+  float:left;
+
+}
+
+#menu {
+  width:220px; 
+  height: auto;
+  float:right;
+  padding: 0px 0px 0px 9px;
+}
+
+#status-content {
+	clear:both;
+	width:inherit;
+    position:static;
+	cursor: n-resize;
 }
 
 .hidden {
   display: none;
 }
 
-.button {
-  margin: 3% auto;
+.status {
+  transform: rotateX(180deg);
+}
+
+.status-content {
+  text-align: left;
+  font-size: 0.75em;
+  color: #e2bd5f;
+  height: 60px;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  scrollbar-width: none;
+  transform: rotateX(180deg);
+}
+
+.logo {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.settings-icon {
+  border: 0;
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  opacity: 0.4;
+  width: 16px;
+  height: 16px;
+}
+
+.settings-icon:hover {
+  transition:All 0.2s ease;
+  color: #222222;
+  cursor: pointer;
+}
+
+.settings-icon:active {
+  transform: scale(0.90);
+}
+
+.image {
+  border-radius: 16px;
+  float: right;
+  width: 20px;
+  height: 20px;
+}
+
+.button { 
+  margin: 2% auto;
   padding: 4px;
   text-align: left;
-  font-size: 1.0em;
+  font-size: 1.1em;
+  color: #e0d0c0;
+  border: 1px solid #e0d0c0;
+  border-radius: 8px;
   cursor: pointer;
   opacity: 0.7;
-  background-color: #E5F2F2;
+  background-color: #222222;
+  transition:All 0.1s ease;
+  transform:  scale(1);
 }
 
 .button:hover {
-  background-color: #CFF2F2;
+  transition:All 0.2s ease;
+  color: #222222;
+  transform:  scale(0.99);
+  box-shadow:
+		0px 1px 1px #222222,
+		inset 222px 1px 1px #e0d0c0;
 }
 
+.button:active {
+  transform: scale(0.96);
+}
 
 .reset {
-  background-color: #FBFBC9;
+  display: table;
+  text-align: center;
+  border: 1px solid #222222;
+  float: bottom;
 }
 
 .reset:hover {
-  background-color: #EAEA9D;
+  background-color: #ff1234;
+  box-shadow:
+		0px 1px 1px #222222,
+		inset 222px 1px 1px #ff1234;
+}
+
+.checkbox {
+  margin: 10px 10px 10px 10px;
+  padding: 4px;
+  text-align: left;
+  font-size: 0.80em;
+  color: #e0d0c0;
+  border: 1px solid #e0d0c0;
+  border-radius: 8px;
+  opacity: 0.7;
+  background-color: #222222;
+}
+
+.checkboxbox {
+	float: right;
+}
+
+@keyframes running {
+  0%   {box-shadow:
+		0px 1px 1px #222222,
+		inset 220px 1px 1px #e0d0c0;
+		color: #222222;}
+  40%	{box-shadow:
+		0px 1px 1px #222222,
+		inset 0px 1px 1px #e0d0c0;}	
+  50%	{color: #e0d0c0;}
+  60%	{box-shadow:
+		0px 1px 1px #222222,
+		inset 0px 1px 1px #e0d0c0;}				
+  100% {box-shadow:
+		0px 1px 1px #222222,
+		inset -220px 1px 1px #e0d0c0;
+		color: #222222;}
+}
+
+.running {
+  animation-name: running;
+  animation-duration: 1s;
+  animation-direction: reverse; 
+  animation-iteration-count: infinite;
 }

@@ -1,42 +1,45 @@
 {
 
-  "manifest_version": 2,
-  "name": "SHiFTLANDS",
-  "version": "1.7.1",
+	"manifest_version": 2,
+	"name": "SHiFTLANDS",
+	"version": "2.0",
 
-  "description": "Redeems all possible borderlands 3 SHiFT codes",
+	"description": "Redeems all possible borderlands 2/3/GOTY/TPS SHiFT codes",
 
-  "icons": {
-    "48": "icons/border-48.png",
-	"96": "icons/border-96.png"
-  },
+	"icons": {
+		"48": "icons/border-48.png",
+		"96": "icons/border-96.png"
+	},
   
-  "permissions": [
-    "activeTab",
-	"tabs",
-	"devtools",
-	"<all_urls>",
-	"http://*/*",
-	"https://*/*",
-	"*://*/*",
-    "nativeMessaging",
-    "notifications",
-    "storage",
-    "tabHide",
-    "webNavigation",
-    "webRequest"
-  ],
+	"permissions": [
+		"activeTab",
+		"tabs",
+		"<all_urls>",
+		"http://*/*",
+		"https://*/*",
+		"*://*/*",
+		"storage",
+		"tabHide",
+		"webNavigation",
+		"webRequest"
+	],
   
 
-  "browser_action": {
-    "default_icon": "icons/border-32.png",
-    "default_title": "SHiFTLANDS",
-    "default_popup": "popup/border_menu.html"
-  },
+	"browser_action": {
+		"default_icon": "icons/border-32.png",
+		"default_title": "SHiFTLANDS",
+		"default_popup": "popup/border_menu.html"
+	},
 
 
 	"background": {
 		"scripts": ["background_scripts/background.js"]
+	},
+	
+	"options_ui": {
+		"page": "options/options.html",
+		"browser_style": true,
+		"open_in_tab": false
 	}
 
 
