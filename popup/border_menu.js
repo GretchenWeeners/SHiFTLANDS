@@ -270,7 +270,7 @@ browser.runtime.onMessage.addListener((message) => {
 					tab_inject_code("https://borderlands.com/en-US/vip-codes/", data);
 				});
 		} else if (message.statuscommand.includes("Activity opened")) {
-			var querying = browser.tabs.query({});
+		/*	var querying = browser.tabs.query({});
 				querying.then((tabs) => {
 					for (let tab of tabs) {
 						if (findIfExists(safetabs, tab.id) == false) {
@@ -278,7 +278,7 @@ browser.runtime.onMessage.addListener((message) => {
 								consolelog("Activity " + tab.id + " closed");
 						}
 					}
-				});
+				}); */
 		} else if (message.statuscommand.includes("Activity redeem complete")) {
 			fetch(browser.runtime.getURL("content_scripts/vip_complete.js"))
 				.then(response => response.text())
@@ -287,6 +287,15 @@ browser.runtime.onMessage.addListener((message) => {
 					data = data.replace("message2","You may want to run this a couple of times, as is doesnt always register the clicks.");
 					tab_inject_code("https://borderlands.com/en-US/vip-activities/", data);
 				});
+			var querying = browser.tabs.query({});
+			querying.then((tabs) => {
+				for (let tab of tabs) {
+					if (findIfExists(safetabs, tab.id) == false) {
+						browser.tabs.remove(tab.id);
+							consolelog("Activity " + tab.id + " closed");
+					}
+				}
+			});
 		}
 	}
 	if (message.togglerunningoff) {

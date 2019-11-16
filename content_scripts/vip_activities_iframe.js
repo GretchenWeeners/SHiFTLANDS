@@ -25,10 +25,15 @@
 	for (i = 0; i < document.getElementsByTagName('li').length; i++) { 
 		if (!document.getElementsByTagName('li')[i].className.includes("completed")) {
 			document.getElementsByTagName('li')[i].click();
-			await sleep(1);
+			//await sleep(1);
 			consolelog("Activity opened");
 		}
 	}
+	consolelog("Waiting for pages to load, please wait");
+	for (var i = 0; i < 10; i++) {
+		consolelog((10-i) + " seconds remaining...");
+		await sleep(1000);
+	} 
 	consolelog("Activity redeem complete");
 	togglerunningoff("#button-activities");
 })();
