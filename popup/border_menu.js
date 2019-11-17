@@ -244,6 +244,30 @@ browser.storage.local.get().then((item) => {
 	}
 });
 
+	browser.runtime.getPlatformInfo()
+	.then((platforminfo) => {
+		if (platforminfo.os == "android") {
+			document.getElementById("menu").style.width = "100%";
+			document.getElementById("status").style.width = "100%";
+			document.getElementById("status-content").style.height = "200px";
+			document.getElementById("status-content").style.fontSize = "2em";
+			document.getElementsByClassName("logo")[0].style.height = "400px";
+			document.getElementsByClassName("logo")[0].style.width = "auto";
+			document.getElementsByClassName("settings-icon")[0].style.height = "100px";
+			document.getElementsByClassName("settings-icon")[0].style.width = "auto";
+			for (let i = 0; i < document.getElementsByClassName("button").length; i++) {
+				document.getElementsByClassName("button")[i].style.height = "100px";
+				document.getElementsByClassName("button")[i].style.fontSize = "4em";
+			}
+			for (let i = 0; i < document.getElementsByClassName("image").length; i++) {
+				document.getElementsByClassName("image")[i].style.height = "100%";
+				document.getElementsByClassName("image")[i].style.width = "auto";
+			}
+			
+		}
+	});
+
+
 //listen for the user clicking stuff, like user do
 listenForClicks();
 
