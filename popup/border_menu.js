@@ -23,7 +23,7 @@ function statuslog(log) {
 	document.getElementsByClassName("status")[0].appendChild(item);
 }
 
-function getActiveTab() 
+function getActiveTab()
 {
 	//thought id put this in a function and barely ever use it
 	return browser.tabs.query({active: true, currentWindow: true});
@@ -33,6 +33,22 @@ function sleep(ms) {
 	return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+
+async function getCookie(theurl, thecookie)
+{
+	var returnCookie = "";
+	var getting = browser.cookies.get({
+    url: theurl,
+    name: thecookie
+  });
+  await getting.then((cookie) => {
+		if (cookie) {
+			returnCookie = cookie.value;
+	  }
+	});
+	return returnCookie;
+}
+
 async function tab_inject(tab_url, script_url) {
 	getActiveTab().then((tabs) => {
 	//if borderlands vip page is active
@@ -40,9 +56,9 @@ async function tab_inject(tab_url, script_url) {
 			consolelog(`Opening new tab`);
 			browser.tabs.create({url: tab_url});
 		}
-    
+
 	});
-	
+
 	var tabLoaded = false;
 	while (tabLoaded == false)
 	{
@@ -52,13 +68,13 @@ async function tab_inject(tab_url, script_url) {
 			if (tabs[0].url == tab_url) {
 				consolelog(`Tab loaded`);
 				tabLoaded = true;
-				
+
 				var vip_logo_url = browser.runtime.getURL("images/shiftlands-vip-logo.png");
 				var css = `.sprite-vip-logo { background-image: url(\"${vip_logo_url}"); background-position: 0px 0px; width: 227px; height: 147px; }`
 				browser.tabs.insertCSS({
 					code: css
 				});
-				
+
 				consolelog(`Trying to inject code into tab`);
 				fetch(script_url)
 					.then(response => response.text())
@@ -67,9 +83,9 @@ async function tab_inject(tab_url, script_url) {
 							code: data
 						});
 					});
-			} 
+			}
 		});
-		
+
 	}
 }
 
@@ -98,10 +114,10 @@ async function tab_inject_code(tab_url, data, verbose) {
 				if (verbose) {consolelog(`Trying to inject code into tab`);}
 				browser.tabs.executeScript({
 					code: data
-				});	
+				});
 			}
 		});
-		
+
 	}
 }
 
@@ -110,9 +126,9 @@ async function iframe_inject(iframe_url, script_url) {
 	iframeReturncode = 0;
 	while (iframeReturncode == 0) {
 		await getActiveTab().then((tabs) => {
-			browser.webNavigation.getAllFrames({tabId: tabs[0].id}).then((framesInfo) => {	
+			browser.webNavigation.getAllFrames({tabId: tabs[0].id}).then((framesInfo) => {
 				var i;
-				for (i = 1; i < framesInfo.length; i++) { 
+				for (i = 1; i < framesInfo.length; i++) {
 					if (framesInfo[i].url.includes(iframe_url)) {
 						iframeReturncode = 1;
 						TWOKAY = framesInfo[i].frameId;
@@ -140,9 +156,9 @@ async function iframe_inject_code(iframe_url, data) {
 	iframeReturncode = 0;
 	while (iframeReturncode == 0) {
 		await getActiveTab().then((tabs) => {
-			browser.webNavigation.getAllFrames({tabId: tabs[0].id}).then((framesInfo) => {	
+			browser.webNavigation.getAllFrames({tabId: tabs[0].id}).then((framesInfo) => {
 				var i;
-				for (i = 1; i < framesInfo.length; i++) { 
+				for (i = 1; i < framesInfo.length; i++) {
 					if (framesInfo[i].url.includes(iframe_url)) {
 						iframeReturncode = 1;
 						TWOKAY = framesInfo[i].frameId;
@@ -163,11 +179,19 @@ async function iframe_inject_code(iframe_url, data) {
 
 //see what the user clicks
 function listenForClicks() {
-	document.addEventListener("click", (e) => {	
+	document.addEventListener("click",(e) => {
 		//shift button
 		if (e.target.classList.contains("shift")) {
-			toggleRunning("#button-shift", "on");
-			tab_inject("https://borderlands.com/en-US/vip-codes/", browser.runtime.getURL("content_scripts/shift_redemption.js"));
+			(async function() {
+				var preferredLocale = await (await getCookie("https://borderlands.com","preferredLocale"));
+				if (preferredLocale) {
+					toggleRunning("#button-shift", "on");
+					tab_inject("https://borderlands.com/" + preferredLocale + "/vip-codes/", browser.runtime.getURL("content_scripts/shift_redemption.js"));
+				} else {
+					toggleRunning("#button-shift", "on");
+					tab_inject("https://borderlands.com/en-US/vip-codes/", browser.runtime.getURL("content_scripts/shift_redemption.js"));
+				}
+			})();
 		} //update button
 		else if (e.target.classList.contains("shupdate")) {
 			toggleRunning("#button-shupdate", "on");
@@ -231,7 +255,7 @@ function toggleRunning(elementName, onOff) {
 }
 
 document.querySelector("#status-content").classList.add("hidden");
-browser.storage.local.get().then((item) => { 
+browser.storage.local.get().then((item) => {
 	if (item.openonclick) {
 		getActiveTab().then((tabs) => {
 			if (tabs[0].url != "https://borderlands.com/en-US/vip-codes/") {
@@ -263,7 +287,7 @@ browser.storage.local.get().then((item) => {
 				document.getElementsByClassName("image")[i].style.height = "100%";
 				document.getElementsByClassName("image")[i].style.width = "auto";
 			}
-			
+
 		}
 	});
 
@@ -325,12 +349,5 @@ browser.runtime.onMessage.addListener((message) => {
 	if (message.togglerunningoff) {
 		toggleRunning(message.togglerunningoff, "off");
 	}
-	
+
 });
-
-
-
-
-
-
-

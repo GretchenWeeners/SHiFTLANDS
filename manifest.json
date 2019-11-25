@@ -2,7 +2,7 @@
 
 	"manifest_version": 2,
 	"name": "SHiFTLANDS",
-	"version": "2.1",
+	"version": "2.1.1",
 
 	"description": "Redeems all possible borderlands 2/3/GOTY/TPS SHiFT codes",
 
@@ -10,11 +10,12 @@
 		"48": "icons/border-48.png",
 		"96": "icons/border-96.png"
 	},
-  
+
 	"permissions": [
 		"activeTab",
 		"tabs",
 		"<all_urls>",
+		"cookies",
 		"http://*/*",
 		"https://*/*",
 		"*://*/*",
@@ -23,7 +24,7 @@
 		"webNavigation",
 		"webRequest"
 	],
-  
+
 
 	"browser_action": {
 		"default_icon": "icons/border-32.png",
@@ -35,7 +36,7 @@
 	"background": {
 		"scripts": ["background_scripts/background.js"]
 	},
-	
+
 	"options_ui": {
 		"page": "options/options.html",
 		"browser_style": true,
@@ -43,5 +44,5 @@
 	}
 
 
-  
+
 }
