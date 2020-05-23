@@ -70,10 +70,10 @@ async function tab_inject(tab_url, script_url) {
 				tabLoaded = true;
 
 				var vip_logo_url = browser.runtime.getURL("images/shiftlands-vip-logo.png");
-				var css = `.sprite-vip-logo { background-image: url(\"${vip_logo_url}"); background-position: 0px 0px; width: 227px; height: 147px; }`
-				browser.tabs.insertCSS({
-					code: css
-				});
+				var css = `.sprite-nav-logo { background-image: url(\"${vip_logo_url}"); background-position: 0px 0px; width: 227px; height: 147px; }`
+				//browser.tabs.insertCSS({
+				//	code: css
+				//});
 
 				consolelog(`Trying to inject code into tab`);
 				fetch(script_url)
@@ -107,10 +107,10 @@ async function tab_inject_code(tab_url, data, verbose) {
 				if (verbose) {consolelog(`Tab loaded`);}
 				tabLoaded = true;
 				var vip_logo_url = browser.runtime.getURL("images/shiftlands-vip-logo.png");
-				var css = `.sprite-vip-logo { background-image: url(\"${vip_logo_url}"); background-position: 0px 0px; width: 227px; height: 147px; }`
-				browser.tabs.insertCSS({
-					code: css
-				});
+				var css = `.sprite-nav-logo { background-image: url(\"${vip_logo_url}"); background-position: 0px 0px; width: 227px; height: 147px; }`
+				//browser.tabs.insertCSS({
+				//	code: css
+				//});
 				if (verbose) {consolelog(`Trying to inject code into tab`);}
 				browser.tabs.executeScript({
 					code: data
@@ -186,10 +186,10 @@ function listenForClicks() {
 				var preferredLocale = await (await getCookie("https://borderlands.com","preferredLocale"));
 				if (preferredLocale) {
 					toggleRunning("#button-shift", "on");
-					tab_inject("https://borderlands.com/" + preferredLocale + "/vip-codes/", browser.runtime.getURL("content_scripts/shift_redemption.js"));
+					tab_inject("https://borderlands.com/" + preferredLocale, browser.runtime.getURL("content_scripts/shift_redemption.js"));
 				} else {
 					toggleRunning("#button-shift", "on");
-					tab_inject("https://borderlands.com/en-US/vip-codes/", browser.runtime.getURL("content_scripts/shift_redemption.js"));
+					tab_inject("https://borderlands.com/en-US/", browser.runtime.getURL("content_scripts/shift_redemption.js"));
 				}
 			})();
 		} //update button
